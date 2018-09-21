@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+		<head>
+		<meta charset="utf-8"/>
+				<script type="text/javascript">
+				
+				    function create_table(doc)
+					{
+						if (("Row" in doc.Mainline.Table) == true)
+						{
+						var tab = "<html><head><title>Container info</title></head><body><table border='2'><tr>";
+						table_headings = doc.Mainline.Table.Header.Data;
+							for (i=0; i < table_headings.length; i++)
+							{
+							tab += "<th>"+table_headings[i]+"</th>";
+							}
+						tab+="</tr>";
+						
+						
+						all_data = doc.Mainline.Table.Row;
+						for (i = 0; i < all_data.length; i++)
+						{
+							single_row_data = all_data[i];
+							keys = Object.keys(single_row_data);
+							tab += "<tr><td>"+single_row_data[keys[0]]+"</td>";
+							tab += "<td>"+single_row_data[keys[1]]+"</td>";
+							hq_data = single_row_data[keys[2]].Hub;
+							hq_number_ele = hq_data.length;
+							if (hq_number_ele != 0)
+							{
+								tab += "<td><ul>"
+								for (k = 0; k < hq_number_ele; k++)
+								{
+									if (k == 0)
+										tab += "<li><b>"+hq_data[k]+"</b></li>";
+									else
+										tab += "<li>"+hq_data[k]+"</li>";
+								}
+								tab += "</ul></td>";
+							
+							}
+							else
+							{
+								tab += "<td></td>";
+							}
+							tab += "<td>"+single_row_data[keys[3]]+"</td>";
+							tab += "<td><a href=\""+single_row_data[keys[4]]+"\">"+single_row_data[keys[4]]+"</a></td>";
+							tab += "<td><img height=\"100px\" width=\"180px\" src=\""+single_row_data[keys[5]]+"\"></td>";
+						}
+						
+						tab += "</tr></table></body></html>";
+						var new_win = window.open("","_blank", "width=1000px,height=900px");
+						new_win.document.write(tab);
+						new_win.document.close();
+						}
+						else
+						{
+							alert("Error: File does not contain any entries");
+						}
+					}
+					
+					function validate_isEmpty() {
+					    filename = document.getElementById("textbox_filename");
+						if (!filename.value || !filename.value.match(/\S/))
+							return true;
+						else
+							return false;
+					}
+					
+					function show_data() {
+					
+						var check_input = validate_isEmpty();
+						if (check_input == true)
+							alert('Incorrect input: Not a valid file name');
+						else
+						{	
+							var json_document; 
+							var xmlreq = new XMLHttpRequest();
+							xmlreq.open("GET", filename.value, false);
+							xmlreq.send();
+							
+							console.log(xmlreq.status);
+							
+							if (xmlreq.status != 200)
+							{
+							  alert("Error: File does not exist");
+							}
+							else
+							{
+								json_document = xmlreq.responseText;
+								json_obj = JSON.parse(json_document);
+								create_table(json_obj);
+							}
+						}
+						}
+				</script>
+		</head>
+		
+		<body style="text-align:center">
+				<br/>
+				<br/>
+				<br/>
+				<br/>
+				<br/>
+				<br/>
+				<form>
+						<h3>Enter URL for Container Ship Companies List JSON File</h3>
+						<input type="text" id="textbox_filename">
+						<br/>
+						<br/>
+						<input type="submit" value="Submit Query" onclick="show_data()">
+				</form>
+				
+				
+		</body>
+</html>
