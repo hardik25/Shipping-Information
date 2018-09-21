@@ -45,7 +45,15 @@
 							}
 							tab += "<td>"+single_row_data[keys[3]]+"</td>";
 							tab += "<td><a href=\""+single_row_data[keys[4]]+"\">"+single_row_data[keys[4]]+"</a></td>";
-							tab += "<td><img height=\"100px\" width=\"180px\" src=\""+single_row_data[keys[5]]+"\"></td>";
+							if (single_row_data[keys[5]])
+							{
+								tab += "<td><img height=\"100px\" width=\"180px\" src=\""+single_row_data[keys[5]]+"\"></td>";
+							}
+							else
+							{
+								tab += "<td></td>";
+							}
+							
 						}
 						
 						tab += "</tr></table></body></html>";
